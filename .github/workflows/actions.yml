@@ -1,43 +1,27 @@
-
-name: run main.py
+name: action test
 
 on:
   push:
     paths:
-      - '**.csv'
+      -'**.csv'
 
 jobs:
-  build:
+  testactions:
     runs-on: ubuntu-latest
     steps:
-
       - name: checkout repo content
-        uses: actions/checkout@v2 # checkout the repository content to github runner
-
+        uses: actions/checkout@v3 # checkout the repository content to github runner.
       - name: setup python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.9' # install the python version needed
-          
-      - name: install python packages
+          python-version: 3.8 #install the python needed
+      - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-          
-      - name: execute py script # run main.py
-        env:
-          SOME_SECRET: ${{ secrets.SOME_SECRET }}
-        run: python main.py
-          
-      - name: commit files
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+      - name: execute py script
         run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add -A
-          git diff-index --quiet HEAD || (git commit -a -m "updated logs" --allow-empty)
-          
-      - name: push changes
-        uses: ad-m/github-push-action@v0.6.0
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: main 
+          python main.py
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add .
+          git commit -m
