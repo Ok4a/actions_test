@@ -3,7 +3,7 @@ name: action test
 on:
   push:
     paths:
-      -'**.csv'
+      - '**.csv'
 
 jobs:
   testactions:
